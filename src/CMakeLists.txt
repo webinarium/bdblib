@@ -34,3 +34,5 @@ endif (MSVC)
 message("---------------------------------------------")
 
 add_subdirectory(log4cplus bin/log4cplus)
+add_subdirectory(protobuf  bin/protobuf)
+add_subdirectory(protoc    bin/protoc)
