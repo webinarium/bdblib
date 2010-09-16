@@ -1,15 +1,3 @@
 This library is an upper-level layer on top of [http://www.oracle.com/technology/products/berkeley-db Berkeley DB] library. Main goals of the library are to simplify original *Berkeley DB* API, and to add seamless serialization.
 
 ----
-
- * [LibraryStructure Library Structure]
- * [LibraryBuilding Library Building]
- * [RuntimeLogging Run-time Logging]
- * [Databases Databases]
- * [Serialization Serialization]
- * [Sequences Sequences]
- * [Tables Tables]
- * [Indexes Indexes]
- * [NaturalJoins Natural Joins]
- * [ForeignKeys Foreign Keys]
- * [http://bdblib.googlecode.com/svn/trunk/doxygen/index.html Library Reference]
