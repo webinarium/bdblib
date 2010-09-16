@@ -18,23 +18,32 @@
 #
 #---------------------------------------------------------------------------------------------------
 
-project(bdblib)
+project(test)
 cmake_minimum_required(VERSION 2.6)
 
-set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/cmake)
+aux_source_directory(src ${PROJECT_NAME}_SRC)
+
+include_directories(${CMAKE_BINARY_DIR}/include hdr)
+link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRC})
+
+add_dependencies(${PROJECT_NAME}
+                 log4cplus
+                 protobuf
+                 protoc
+                 bdb)
+
+target_link_libraries(${PROJECT_NAME}
+                      log4cplus
+                      protobuf
+                      bdb)
 
 if (MSVC)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_definitions(-W3)
 else (MSVC)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+add_definitions(-Wall -Wextra -Wno-sign-compare -ansi)
 endif (MSVC)
 
+message(STATUS "Target '${PROJECT_NAME}' is configured")
 message("---------------------------------------------")
-
-add_subdirectory(log4cplus bin/log4cplus)
-add_subdirectory(protobuf  bin/protobuf)
-add_subdirectory(protoc    bin/protoc)
-add_subdirectory(bdb       bin/bdb)
-add_subdirectory(test      bin/test)
