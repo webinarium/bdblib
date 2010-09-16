@@ -32,3 +32,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
 endif (MSVC)
 
 message("---------------------------------------------")
+
+add_subdirectory(log4cplus bin/log4cplus)
