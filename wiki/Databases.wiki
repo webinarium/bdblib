@@ -1,0 +1,97 @@
+<wiki:toc max_depth="3" />
+
+----
+
+To be more close to standard SQL terminology, the library uses term _database_ instead of Berkeley DB's _environment_, and term _table_ instead of Berkeley DB's _database_.
+
+= Create/open database =
+
+Before performing any operation on the stored data, you have to open (or create) a database. All database files (including tables, indexes, etc) will be stored in a single directory, which must be specified when you open a database:
+
+{{{
+#include <bdb.h>
+
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+
+    bdb::database db("C:\\mydbdir");
+
+    return 0;
+}
+}}}
+
+If the database exists in the specified directory, it will be opened and ready to use, and will be closed automatically in destructor of the *db* object. If the database doesn't exist, you will get a bdb::exception with "BDB_ERROR_NOT_FOUND" error code.
+
+You can preliminary create a database, using *true* in second optional parameter of the constructor:
+
+{{{
+    bdb::database db("C:\\mydbdir", true);
+}}}
+
+This will create a new empty database and will keep it opened until the *db* object is destroyed. If the database does already exist on attempt of creation, you will get a bdb::exception with "BDB_ERROR_EXISTS" error code.
+
+= Database Objects (DBOs) =
+
+When database is just opened, it still has no idea about DBOs which belong to it. You have to add all related tables, indexes, and sequences to the opened database in order to be able to use them:
+
+{{{
+#include <bdb.h>
+
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+
+    bdb::database db("C:\\mydbdir");
+
+    bdb::sequence* seq = db.add_sequence("myseq");
+
+    bdb::table* table1 = db.add_table("table1", NULL);
+    bdb::table* table2 = db.add_table("table2", NULL);
+    ...
+
+    bdb::index* index1 = table1->add_index("index1", NULL, NULL);
+    bdb::index* index2 = table1->add_index("index2", NULL, NULL);
+
+    bdb::index* index3 = table2->add_index("index3", NULL, NULL);
+    ...
+
+    return 0;
+}
+}}}
+
+All types of DBO are described in details in further sections. There are only two things to be noted at the moment:
+- all opened DBOs will be closed automatically when the database is closed,
+- you have three namespaces for your DBOs, one for each DBO type (so you can create, for example, table and index with the same name).
+
+= Transactions =
+
+Any database in the library is always opened in the transactional mode, so you can join your operations together (including creating or opening DBOs) in a single transaction. To start a transaction, use:
+
+{{{
+    db.begin_transaction();
+}}}
+
+to commit last started transaction:
+
+}}}
+    db.commit_transaction();
+}}}
+
+and to rollback a transaction:
+
+{{{
+    db.rollback_transaction();
+}}}
+
+Please note, that all transactions are nestable, so you can easily use one transaction inside another.
+
+= Berkeley DB Subsystems =
+
+Berkeley DB provides several different subsystems on its environments. For the sake of simplicity the library does not allow to choose between them and always activates the following:
+
+ * multi-threaded access
+ * multi-processed access
+ * logging system
+ * in-memory cache
+ * transactions
