@@ -1,0 +1,96 @@
+<wiki:toc max_depth="3" />
+
+----
+
+= Project structure =
+
+*BDB Library* depends on several 3rd party libraries. Some of them are put into the repository and are built together with the library.
+
+ * *cmake* - CMake related files
+ * *include* - common project include directory
+ * *[http://log4cplus.sourceforge.net log4cplus]* - run-time logging library
+ * *[http://code.google.com/apis/protocolbuffers protobuf/protoc]* - compile-time serialization library
+ * *bdb* - the library itself
+ * *test* - UnitTest application
+
+*[http://log4cplus.sourceforge.net Log4cplus]* and  *[http://code.google.com/apis/protocolbuffers Protocol Buffers]* libraries are not popular enough to be present in most of modern systems as pre-built binaries, so they are just built along with *BDB Library*. The library depends also on *[http://www.oracle.com/technology/products/berkeley-db/ Berkeley DB]* and *[http://www.boost.org/ Boost DateTime]* library - them should be installed manually.
+
+= Prerequisites =
+
+To build the project sources you need:
+ * CMake
+ * Berkeley DB
+ * Boost
+ * a compiler
+
+== CMake ==
+
+The library uses [http://www.cmake.org/ CMake] to generate required build configuration, makefiles, etc. You have to get CMake as of version 2.6 or later.
+
+== Berkeley DB ==
+
+[http://www.oracle.com/technology/products/berkeley-db/ Berkeley DB] is a library which C API is used in the project, so you have to install it (version 4.7 or later is required).
+
+== Boost ==
+
+*BDB Library* uses *Date Time* Boost library, so you have to install it. It must be as of version 1.37.0 at least. You can find installation details at [http://www.boost.org/ Boost home page].
+
+Windows users, who don't want to fall into building the Boost, can use official prebuilt Boost binaries from [http://www.boostpro.com/download BoostPro Computing]. Just download installer, launch it, and choose at least following items to install (they will be automatically downloaded by installer):
+
+ * Boost header files
+ * Boost !DateTime
+   * Multithreaded
+   * Multithreaded debug
+   * Multithreaded, static runtime
+   * Multithreaded debug, static runtime
+
+http://bdblib.googlecode.com/svn/wiki/images/boostpro.png
+
+== Compiler ==
+
+*BDB Library* pretends to be a cross-platform library and, talking about its building, CMake helps with this, so you probably can use any compiler on any system. The proven cases are *gcc* for Linux and *Visual Studio 2008* for Windows - both are fine and can be used to build the project.
+
+----
+
+= Building for Linux =
+
+If you are familiar with CMake, you know how to generate a project file for your favourite IDE, like *KDevelop*, *Code::Blocks*, *Eclipse*, whatever. Otherwise the simplest way is generate standard UNIX makefiles:
+
+{{{
+$ svn co http://bdblib.googlecode.com/svn/trunk
+$ cd trunk/src
+$ ./unix.sh
+}}}
+
+This will generate some default configuration. If you need another, you can use one of following options:
+
+{{{
+$ ./unix.sh Debug
+$ ./unix.sh Release
+$ ./unix.sh RelWithDebInfo
+$ ./unix.sh MinSizeRel
+}}}
+
+When generation is successfully completed, just launch compilation as usual:
+
+{{{
+$ make
+}}}
+
+This will build the entire project. You can also list all possible make's targets with '`make help`'.
+
+In case of errors in CMake or building please raise [http://code.google.com/p/bdblib/issues/entry new issue] with detailed description and output.
+
+----
+
+= Building for Windows =
+
+First of all, generate Visual Studio 2008 solution:
+
+{{{
+> svn co http://bdblib.googlecode.com/svn/trunk
+> cd trunk/src
+> vs2008.cmd
+}}}
+
+When generation is successfully completed, you will see '`bdblib.sln`' file, which can be opened in the IDE.
