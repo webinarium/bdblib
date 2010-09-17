@@ -1,0 +1,23 @@
+The library uses *[http://log4cplus.sourceforge.net log4cplus]* for run-time logging. A client, uses the library, is responsible for one-step configuration of the library's logger before calling any library function by following statement:
+
+{{{
+#include <bdb.h>
+
+#include <log4cplus/logger.h>
+#include <log4cplus/configurator.h>
+
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+    // ...
+    return 0;
+}
+}}}
+
+Also a client can change the logging level at run-time, for example:
+
+{{{
+   log4cplus::Logger::getInstance(BDB_LOGGER_PORT).setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
+}}}
+
+The list of all possible levels is available in the *log4cplus* documentation.
