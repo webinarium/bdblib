@@ -1,0 +1,87 @@
+<wiki:toc max_depth="3" />
+
+----
+
+The library uses *[http://code.google.com/apis/protocolbuffers Protocol Buffers]* for serialization of storing records. You have to familiarize yourself with *Protocol Buffers*. The following two guides are recommended:
+
+ * [http://code.google.com/apis/protocolbuffers/docs/overview.html Developer Guide],
+ * [http://code.google.com/apis/protocolbuffers/docs/proto.html Language Guide].
+
+Any record, stored in Berkeley DB database, is presented there via Berkeley DB's *[http://www.oracle.com/technology/documentation/berkeley-db/db/api_reference/C/dbt.html DBT]* structure, which is supposed to work with serialized "raw" binary buffers. The library provides several serialization functions, which make it easy to convert from custom data structure into *DBT* one, and back. Actually, all the required serialization and unserialization are performed by the library automatically, besides very special cases, which will be underlined in further sections when appeared. But in case you may eventually need to work with *DBT* structures yourself, below is description of the library's serialization API.
+
+= Serialize =
+
+Let's assume you have the following data structure, described in your *.proto* file:
+
+{{{
+package patients;
+
+message key
+{
+    required string firstname = 1;
+    required string lastname  = 2;
+};
+}}}
+
+To serialize our data we just need to use *bdb::serialize* function. Please note that this function allocates required "user-space" memory and if you called the function then you are responsible to free the memory by *bdb::release* function, when you're done with resulted *DBT* structure:
+
+{{{
+#include <bdb.h>
+
+#include <log4cplus/logger.h>
+#include <log4cplus/configurator.h>
+
+#include <patients.pb.h>
+
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+
+    DBT dbt;
+    patients::key key;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    bdb::serialize(&key, &dbt);
+
+    ...
+
+    bdb::release(&dbt);
+
+    return 0;
+}
+}}}
+
+= Unserialize =
+
+Sometimes you need reverse operation to get a live data from a "raw" *DBT* structure, you have received from somewhere.
+
+{{{
+#include <bdb.h>
+
+#include <log4cplus/logger.h>
+#include <log4cplus/configurator.h>
+
+#include <patients.pb.h>
+
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+
+    DBT dbt;
+
+    // getting DBT from somewhere
+
+    patients::key key;
+
+    bdb::unserialize(&dbt, &key);
+
+    std::cout << "First name: " << key.firstname() << "\n"
+              << "Last name:  " << key.lastname()  << "\n";
+
+    return 0;
+}
+}}}
+
+The *bdb::unserialize* function doesn't need any "cleanup", like the reverse one.
