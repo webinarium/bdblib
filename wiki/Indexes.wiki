@@ -1,0 +1,139 @@
+<wiki:toc max_depth="3" />
+
+----
+
+Now we can store records and retrieve them by their _key_ or as a whole recordset. But what if we need to find several records by another field? For example, we have to check all patients from specific city - do we need to search through _data_ part of all stored records?
+
+Berkeley DB offers indexes to make the things above possible. An index is like a regular table - it can store records of _key_ and _data_ pairs too. But in an index the _key_ is a predefined part of table's _data_ part. And this makes possible to query, for example, all patients from Vladivostok.
+
+Another difference from tables is that indexes can contain duplicating _keys_. Actually, when you are just creating an index, you have to specify, whether it will contain duplicates or not. In most cases it's better to allow duplicates, like in our example - we want to get information about all patients from Vladivostok, not only about one.
+
+If the index was created without allowing duplicates, you will not be able to insert unique record, which contains the same city as another already existing record. Such "unique-only" indexes can be helpful when you have several unique parts in your information. In our example we choose first and last names as an unique pair of values (which actually is not in the real world). Let's assume that we also will store SSN among other patient information. We can't use it as a _key_, because we already have one. And creating "unique-only" index with SSN in its _keys_ will help us to implement this constraint - we just will not be able to insert two records with the same SSN, even all other fields (including _key_ ones) are different.
+
+One more thing to remember about indexes - you can only read from them. The index will be updated by Berkeley DB automatically each time you are changing master table. When you are inserting new record into master table, Berkeley DB extracts from its _data_ part a new _key_ for the index and insert it there. When you are deleting from master table, the index is reduced too.
+
+= Indexing callback =
+
+Berkeley DB has no idea about what part of original _data_ should be transformed into _key_ of your index, and how. You have to define this procedure and provide Berkeley DB with it via callback function.
+
+Let's get back to our example. We decided to create an index for _city_ field, and we need to describe the _key_ part of the index in our *.proto* file:
+
+{{{
+package patients;
+
+...
+
+message cities
+{
+    required string city = 1;
+};
+}}}
+
+Now let's define the callback function. Such function gets _key_ and _data_ part from master table as input, and have to return another *DBT* structure, which will be used by Berkeley DB as index's _key_ for this master record:
+
+{{{
+int cities_index (DB *,              // you should never rely on this parameter
+                  const DBT * key,   // a "patients::key" of master record
+                  const DBT * data,  // a "patients::data" of master record
+                  DBT * result)      // output "patients::cities"
+{
+    patients::data   d;
+    patients::cities k;
+
+    bdb::unserialize(data, &d);
+    k.set_city(d.city());
+    bdb::serialize(&k, result);
+
+    return 0;
+}
+}}}
+
+*IMPORTANT!* You must never use bdb::release function inside index callbacks - all memory cleanup will be performed automatically in Berkeley DB (just an exception from the rule, mentioned in [Serialization earlier section]).
+
+= Sorting callback =
+
+This is another callback function, you have to provide when opening a table, and it's completely the same as in [Tables tables]. Let's just write down the function:
+
+{{{
+int cities_compare (DB *, const DBT * dbt1, const DBT * dbt2)
+{
+    patients::cities key1, key2;
+
+    bdb::unserialize(dbt1, &key1);
+    bdb::unserialize(dbt2, &key2);
+
+    return key1.city().compare(key2.city());
+}
+}}}
+
+= Create/open index =
+
+Unlike with tables, you can either open existing index (which was already created before), or open an absent one (which will be created automatically). The difference with tables is that you call related function not from database, but from the master table:
+
+{{{
+    ...
+    bdb::database db("C:\\hospital");
+    bdb::table* patients = db.add_table("patients", patients_compare);
+    bdb::index* ix_cities = patients->add_index("cities", cities_index, cities_compare);
+    ...
+}}}
+
+All opened indexes will be closed automatically when database is closed.
+
+Also, it's very important to keep both indexing and sorting methods being the same during whole life of an index.
+
+= Check whether a record exists =
+
+This is as simple as it was in [Tables tables]:
+
+{{{
+    patients::cities key;
+    key.set_city("Vladivostok");
+    cout << "Exists? " << (ix_cities->exists(&key) ? "yes" : "no") << "\n";
+
+}}}
+
+= Simple recordsets =
+
+Simple recordsets for _index_ are the same as for _table_. Please note that _data_ part of the index is a copy of _data_ part of master table. If we need to enumerate all existing records in the index:
+
+{{{
+    bdb::recordset rs(ix_cities);
+
+    patients::key  key;
+    patients::data data;
+
+    while (rs.fetch(&key, &data))
+    {
+        std::cout << "First name:    " << key.firstname() << "\n"
+                  << "Last name:     " << key.lastname()  << "\n"
+                  << "Year of birth: " << data.YOB()      << "\n"
+                  << "City:          " << data.city()     << "\n";
+    }
+}}}
+
+Yes, that's right - the code is completely the same as for tables, because we are getting from recordset original records of master table, in spite of it's performed via the index.
+
+= Filtered recordsets =
+
+Final part is an implementation of situation we started this section with. Just to remind - we don't need all records, we need only patients from Vladivostok:
+
+{{{
+    patients::cities ix;
+    ix.set_city("Vladivostok");
+
+    bdb::recordset rs(ix_cities, &ix);
+
+    patients::key  key;
+    patients::data data;
+
+    while (rs.fetch(&key, &data))
+    {
+        std::cout << "First name:    " << key.firstname() << "\n"
+                  << "Last name:     " << key.lastname()  << "\n"
+                  << "Year of birth: " << data.YOB()      << "\n"
+                  << "City:          " << data.city()     << "\n";
+    }
+}}}
+
+This code will return only those records, which have Vladivostok in their _city_ fields.
