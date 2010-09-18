@@ -1,0 +1,41 @@
+<wiki:toc max_depth="3" />
+
+----
+
+= Create/open sequence =
+
+Sequence is a simple way to get a generator of unique IDs inside your database. You can have as much sequences as you want.
+
+Like a database (and any other DBO, actually) you can either open existing sequence (which must be already created before), or create a new one (which will raise an exception if a sequence already exists).
+
+To create new sequence:
+
+{{{
+#include <bdb.h>
+
+int main ()
+{
+    bdb::database db("C:\\mydbdir");
+    bdb::sequence* seq = db.add_sequence("myseq", true);
+    ...
+}
+}}}
+
+To open existing sequence use *false* in the last parameter (or just skip it, since it's optional and is *false* by default).
+
+= Using sequence =
+
+A sequence generates 64-bit integer values in increment manner starting from *1*. To generate next ID just call the *bdb::sequence::id()* function (which always return different ID, of course):
+
+{{{
+#include <bdb.h>
+
+int main ()
+{
+    bdb::database db("C:\\mydbdir");
+    bdb::sequence* seq = db.add_sequence("myseq");
+    ...
+    int64_t id = seq->id();
+    ...
+}
+}}}
