@@ -1,0 +1,179 @@
+<wiki:toc max_depth="3" />
+
+----
+
+As you maybe already know, Berkeley DB's databases are not relational and each stored record is a pair of two values - _key_ and _data_. Both _key_ and _data_ may contain any values, moreover these values may vary in their length from record to record. In short terms, both _key_ and _data_ are just binary "raw" buffers of custom length. The only special thing here is that the library requires a _key_ to be unique, i.e. you cannot have records with duplicating _keys_ in the same table (while it's allowed for _data_).
+
+= Records sort =
+
+Berkeley DB provides four different access methods for its databases, but the library always uses _B-Tree_ one. This means that records, even when they are a binary mess, are stored in some predefined order. To keep records sorted Berkeley DB calls custom callback function each time it has to rearrange a record. This callback function gets two _keys_ as input, and must return their comparison result (*-1* if first key is less than second one, *+1* if first key is greater than second one, or *0* if keys are equal). There is one more parameter in the callback's prototype, but you should never use it.
+
+For example, let's take same *patients::key* structure from [Serialization previous section] and assume that we need to sort our records by patient's name (last, then first):
+
+{{{
+int patients_compare (DB *, const DBT * dbt1, const DBT * dbt2)
+{
+    patients::key key1, key2;
+
+    bdb::unserialize(dbt1, &key1);
+    bdb::unserialize(dbt2, &key2);
+
+    int res = key1.lastname().compare(key2.lastname());
+
+    if (res == 0)   // last names are equal, compare first ones
+    {
+        res = key1.firstname().compare(key2.firstname());
+    }
+
+    return res;
+}
+}}}
+
+Actually, it's optional to provide Berkeley DB with comparison callback function. In this case Berkeley DB will compare records by itself in binary (byte-by-byte) manner. And if you have simple values, which do not require serialization at all (e.g. you use integers as your _keys_), then you can rely on default comparison (and anyway, example with integers will work on big-endian systems only). If you have custom data structure, then using default binary comparison will still keep records sorted, but in strange order (e.g. shorted string could be put before longer). So, when you are not completely sure that you want default comparison - provide your own comparison method.
+
+= Create/open table =
+
+Like any other DBO, you can either open an existing table (which must be already created before), or create a new one (which will raise an exception if the table already exsits).
+
+To create a new table (keeping same example in touch):
+
+{{{
+    ...
+    bdb::database db("C:\\hospital");
+    bdb::table* patients = db.add_table("patients", patients_compare, true);
+    ...
+}}}
+
+To open existing table use *false* in the last parameter (or just skip it, since it's optional and is *false* by default). All opened tables will be closed automatically when database is closed.
+
+Also, it's very important to keep same sorting method during whole life of a table - once it was created with some sort order, it should be kept with it.
+
+= Insert a record =
+
+Till the moment we have defined the _key_ part of our records. For further examples let's also define the _data_ part, assuming that it will contain any other patient's information, which is not has to be unique at all:
+
+{{{
+package patients;
+
+...
+
+message data
+{
+    required bool   sex  = 1;
+    required int32  YOB  = 2;
+    required string city = 3;
+};
+}}}
+
+We will extend it when necessary; at the moment let's take a look at example, which inserts new record:
+
+{{{
+    #define FEMALE false
+    #define MALE   true
+
+    bdb::database db("C:\\hospital");
+    bdb::table* patients = db.add_table("patients", patients_compare);
+
+    patients::key  key;
+    patients::data data;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    data.set_sex(MALE);
+    data.set_YOB(1978);
+    data.set_city("Vladivostok");
+
+    patients->insert(&key, &data);
+}}}
+
+If you already have a record with same _key_, then *bdb::table::insert* function will raise a related exception.
+
+= Delete a record =
+
+Removal of a record is even simpler - you just need a _key_ to point the record to delete:
+
+{{{
+    patients::key key;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    patients->remove(&key);
+}}}
+
+= Check whether a record exists =
+
+The same simple is to check whether we already have a record with the _key_:
+
+{{{
+    patients::key key;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    cout << "Exists? " << (patients->exists(&key) ? "yes" : "no") << "\n";
+}}}
+
+= Get a record =
+
+We could need the _data_ part of a record, which _key_ we already know:
+
+{{{
+    patients::key  key;
+    patients::data data;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    patients->select(&key, &data);
+
+    cout << "Sex: " << (data.sex() == FEMALE ? "female" : "male") << "\n";
+    cout << "Year of birth: " << data.YOB() << "\n";
+    cout << "City: " << data.city() << "\n";
+}}}
+
+= Update a record =
+
+We can also easily update the _data_ part of existing record:
+
+{{{
+    patients::key  key;
+    patients::data data;
+
+    key.set_firstname("Artem");
+    key.set_lastname("Rodygin");
+
+    patients->select(&key, &data);
+    data.set_city("Chicago");
+    patients->update(&key, &data);
+}}}
+
+You should keep in mind that on update the whole _data_ part is rewritten completely, not just the field we changed. So, we could even do not select original record, but just set all _data_ fields from scratch.
+
+There is one big restriction here, which makes the usage of Berkeley DB databases not so easy - you can't change _key_ part at all, only the _data_ one. It could seem like not a problem at the moment, but we will get back to the question later, discussing [Indexes indexes].
+
+= Recordsets =
+
+If we need to enumerate all existing records in the table, we can use a recordset:
+
+{{{
+    bdb::recordset rs(patients);
+
+    patients::key  key;
+    patients::data data;
+
+    while (rs.fetch(&key, &data))
+    {
+        std::cout << "First name:    " << key.firstname() << "\n"
+                  << "Last name:     " << key.lastname()  << "\n"
+                  << "Year of birth: " << data.YOB()      << "\n"
+                  << "City:          " << data.city()     << "\n";
+    }
+}}}
+
+Passing table's object into recordset's constructor, we are providing it with data source. New recordset will be pointed to the first _(according to our comparison callback function)_ record of the table, and will move to the next record on each call of *bdb::recordset::fetch* function. When we reached the last record and no more records to return are remained, all further calls of the *bdb::recordset::fetch* function will return *false*. We can't go back to previous record, to jump forward, or even to get a number of records. But you can reset recordset's cursor to the first record, if you need, as following:
+
+{{{
+    rs.rewind();
+}}}
