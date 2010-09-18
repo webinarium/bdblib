@@ -7,7 +7,7 @@ The library uses *[http://code.google.com/apis/protocolbuffers Protocol Buffers]
  * [http://code.google.com/apis/protocolbuffers/docs/overview.html Developer Guide],
  * [http://code.google.com/apis/protocolbuffers/docs/proto.html Language Guide].
 
-Any record, stored in Berkeley DB database, is presented there via Berkeley DB's *[http://www.oracle.com/technology/documentation/berkeley-db/db/api_reference/C/dbt.html DBT]* structure, which is supposed to work with serialized "raw" binary buffers. The library provides several serialization functions, which make it easy to convert from custom data structure into *DBT* one, and back. Actually, all the required serialization and unserialization are performed by the library automatically, besides very special cases, which will be underlined in further sections when appeared. But in case you may eventually need to work with *DBT* structures yourself, below is description of the library's serialization API.
+Any record, stored in Berkeley DB database, is presented there via Berkeley DB's *[http://download.oracle.com/docs/cd/E17076_02/html/api_reference/C/dbt.html DBT]* structure, which is supposed to work with serialized "raw" binary buffers. The library provides several serialization functions, which make it easy to convert from custom data structure into *DBT* one, and back. Actually, all the required serialization and unserialization are performed by the library automatically, besides very special cases, which will be underlined in further sections when appeared. But in case you may eventually need to work with *DBT* structures yourself, below is description of the library's serialization API.
 
 = Serialize =
 
