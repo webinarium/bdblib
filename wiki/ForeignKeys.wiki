@@ -1,0 +1,75 @@
+<wiki:toc max_depth="3" />
+
+----
+
+One more type of constraints to increase data integrity is foreign keys. In Berkeley DB you can set up foreign key only between table and index (not between two tables, or two indexes). A foreign key means that any key, inserted into the index (actually, in its master table), must exist in the foreign table.
+
+Let's take an example. Assume, that our hospital serves only several cities, so each patient may have a city only from some predefined list, and we need a separated table for this list.
+
+As far as _keys_ between index and foreign table have to be equal, the structures of these _keys_ must be the same. So, our new table can use existing *patients::cities* structure from our *.proto* file.
+
+The _data_ part of our new table can be any, but in our example it will be just empty. We have to add an empty structure to our *.proto* file:
+
+{{{
+package patients;
+
+...
+
+message empty
+{
+};
+}}}
+
+After that we only have to open this additional table, and link it with related index:
+
+{{{
+    bdb::database db("C:\\hospital");
+    bdb::table* cities    = db.add_table("cities", cities_compare);
+    bdb::table* patients  = db.add_table("patients", patients_compare);
+    bdb::index* ix_years  = patients->add_index("years",  years_index,  years_compare);
+    bdb::index* ix_cities = patients->add_index("cities", cities_index, cities_compare);
+
+    ix_cities->add_foreign(cities);
+}}}
+
+Now we can insert a new patient from Vladivostok, only if we already have such city in the "cities" table, otherwise a related exception will be raised.
+
+= Cascade removal =
+
+One more thing to bring light on is what will happen when we try to delete a record from foreign table. If we have no record with, for example, "Vladivostok" in our "patients" table, then we can easily remove this record from the "cities" table. But if we already have such record among patients, then behavior depends on whether a _cascade removal_ is enabled.
+
+The *bdb::index::add_foreign* function has second optional boolean parameter for cascade removal. If *true* (default value) is passed to the parameter, then all patients from Vladivostok will be deleted automatically when related record in the foreign table "cities" is being deleted. Otherwise an attempt to delete will cause *BDB_ERROR_FOREIGN_KEY* exception.
+
+= Nullification =
+
+It was already mentioned that disability to update existing key is a serious blocker, which is not so easy to work around. Really, what if some patient will change his/her name per some reason. We have no method to say to Berkeley DB - _"replace the key of 'Artem Rodygin' with 'Thomas Rodriguez'"_.
+
+One way to work around is move first and last names to the _data_ part, and use [Sequences sequence] for _key_ part. This is a simplest way to solve, but we still need ability to find patients by name, so in this case we will be forced to create two additional indexes - one for first name and another for last one - and join these two indexes each time when searching for a patient.
+
+Another way to update a key is just to insert new record with new _key_ value and with a copy of _data_ part, and then delete a record with old _key_ value. But if we have foreign keys, related to these data, then removal of existing record with old _key_ value will either be impossible, or cause a data loss - depending on cascade removal setting.
+
+Berkeley DB provides _nullification_ to make this "insert+delete" solution possible. Let's assume that Vladivostok has been renamed to Chicago, so to rename the city we have to insert Chicago to the "cities" table and then to delete Vladivostok from there, updating all related patients with new city name. First of all we must to define a special callback function:
+
+{{{
+int city_change (DB *, const DBT * pkey, DBT * pdata, const DBT * fkey, int * changed)
+{
+    patients::data data;
+    bdb::unserialize(pdata, &data);
+    data.set_city("Chicago");
+    *changed = (int) true;
+}
+}}}
+
+Now, let's set a foreign key, using this callback:
+
+{{{
+    ix_cities->add_foreign(cities, city_change);
+}}}
+
+When we try to delete "Vladivostok" from the "cities" table, Berkeley DB will find all patients with "Vladivostok" in the _data_ part, and then will call our "city_change" function for each of found patients, passing to the function as following:
+
+ * a _key_ part of found patient in the *pkey* parameter,
+ * a _data_ part of found patient in the *pdata* parameter,
+ * a _key_ part of deleting city in the *fkey* parameter.
+
+Our callback may update the _data_ part as it requires. It may also leave it as is, but the city will not be removed then. A callback function must specify, whether it updated the passed _data_, via *changed* parameter which is just a pointer to value treated as boolean.
