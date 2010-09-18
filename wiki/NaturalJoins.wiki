@@ -1,0 +1,155 @@
+In the [Indexes previous section] we created an index for patient's city, and we are able to filter our recordsets by _city_ value now. Also we can add another index for year of birth to get only patient's with specified birth year. But what if we need only patients from Vladivostok, who were born in 1978?
+
+To use two (or more) indexes in one recordset we have to create each index and then join them. Let's illustrate it right by the source code. We extended it several times, so let's bring all parts together now, adding new ones where required.
+
+First of all our *.proto* file:
+
+{{{
+package patients;
+
+message key
+{
+    required string firstname = 1;
+    required string lastname  = 2;
+};
+
+message data
+{
+    required bool   sex  = 1;
+    required int32  YOB  = 2;
+    required string city = 3;
+};
+
+message years
+{
+    required int32 YOB = 1;
+};
+
+message cities
+{
+    required string city = 1;
+};
+}}}
+
+The complete source code with indexes join:
+
+{{{
+#include <bdb.h>
+
+#include <log4cplus/logger.h>
+#include <log4cplus/configurator.h>
+
+#include <patients.pb.h>
+
+// Compares keys of master table.
+int patients_compare (DB *, const DBT * dbt1, const DBT * dbt2)
+{
+    patients::key key1, key2;
+
+    bdb::unserialize(dbt1, &key1);
+    bdb::unserialize(dbt2, &key2);
+
+    int res = key1.lastname().compare(key2.lastname());
+
+    if (res == 0)   // last names are equal, compare first ones
+    {
+        res = key1.firstname().compare(key2.firstname());
+    }
+
+    return res;
+}
+
+// Compares keys of "YOB" index.
+int years_compare (DB *, const DBT * dbt1, const DBT * dbt2)
+{
+    patients::years key1, key2;
+
+    bdb::unserialize(dbt1, &key1);
+    bdb::unserialize(dbt2, &key2);
+
+    return key1.YOB() - key2.YOB();
+}
+
+// Compares keys of "city" index.
+int cities_compare (DB *, const DBT * dbt1, const DBT * dbt2)
+{
+    patients::cities key1, key2;
+
+    bdb::unserialize(dbt1, &key1);
+    bdb::unserialize(dbt2, &key2);
+
+    return key1.city().compare(key2.city());
+}
+
+// Creates a key for "YOB" index.
+int years_index (DB *, const DBT * key, const DBT * data, DBT * result)
+{
+    patients::data  d;
+    patients::years k;
+
+    bdb::unserialize(data, &d);
+    k.set_YOB(d.YOB());
+    bdb::serialize(&k, result);
+
+    return 0;
+}
+
+// Creates a key for "city" index.
+int cities_index (DB *, const DBT * key, const DBT * data, DBT * result)
+{
+    patients::data   d;
+    patients::cities k;
+
+    bdb::unserialize(data, &d);
+    k.set_city(d.city());
+    bdb::serialize(&k, result);
+
+    return 0;
+}
+
+// Main routine.
+int main ()
+{
+    log4cplus::BasicConfigurator::doConfigure();
+
+    // open database and DBOs
+    bdb::database db("C:\\hospital");
+    bdb::table* patients  = db.add_table("patients", patients_compare);
+    bdb::index* ix_years  = patients->add_index("years",  years_index,  years_compare);
+    bdb::index* ix_cities = patients->add_index("cities", cities_index, cities_compare);
+
+    // make recordset from "YOB" index
+    patients::years ix_year;
+    ix_year.set_YOB(1978);
+    bdb::recordset rs_year(ix_years, &ix_year);
+
+    // make recordset from "city" index
+    patients::cities ix_city;
+    ix_city.set_city("Vladivostok");
+    bdb::recordset rs_city(ix_cities, &ix_city);
+
+    // we have to create list of recordsets to join
+    bdb::joinlist r;
+    r.push_back(&rs_year);
+    r.push_back(&rs_city);
+
+    // join recordsets using their master table
+    bdb::recordset rs(patients, r);
+
+    // enumerate resulted recordset as usual
+    patients::key  key;
+    patients::data data;
+
+    while (rs.fetch(&key, &data))
+    {
+        std::cout << "First name:    " << key.firstname() << "\n"
+                  << "Last name:     " << key.lastname()  << "\n"
+                  << "Year of birth: " << data.YOB()      << "\n"
+                  << "City:          " << data.city()     << "\n";
+    }
+
+    return 0;
+}
+}}}
+
+That's it. Just a little more preparations and you get usual recordset to fetch through in the same way as others. The only difference of a recordset, gained as join of others, is that you can't use *bdb::recordset::rewind* function on it - this operation is not applicable on joins and will always cause a related *bdb::exception*.
