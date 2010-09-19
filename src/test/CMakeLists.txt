@@ -31,7 +31,6 @@ add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRC})
 add_dependencies(${PROJECT_NAME}
                  log4cplus
                  protobuf
-                 protoc
                  bdb)
 
 target_link_libraries(${PROJECT_NAME}
