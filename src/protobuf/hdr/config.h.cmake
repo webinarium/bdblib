@@ -95,13 +95,13 @@
 #define PACKAGE_NAME "Protocol Buffers"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Protocol Buffers 2.2.0"
+#define PACKAGE_STRING "Protocol Buffers 2.3.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "protobuf"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.2.0"
+#define PACKAGE_VERSION "2.3.0"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -111,7 +111,7 @@
 #cmakedefine STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "2.2.0"
+#define VERSION "2.3.0"
 
 /* Define to 1 if on AIX 3.
    System headers sometimes define this.
