@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 2.6)
 
 if (MSVC)
 
-    configure_file(hdr/config.h.msvc ${CMAKE_BINARY_DIR}/include/config.h COPYONLY)
+    configure_file(hdr/config.h.msvc ${CMAKE_BINARY_DIR}/build/include/protobuf/config.h COPYONLY)
 
 else (MSVC)
 
@@ -185,7 +185,7 @@ else (MSVC)
     set(_POSIX_PTHREAD_SEMANTICS TRUE)
     set(_TANDEM_SOURCE TRUE)
 
-    configure_file(hdr/config.h.cmake ${CMAKE_BINARY_DIR}/include/config.h)
+    configure_file(hdr/config.h.cmake ${CMAKE_BINARY_DIR}/build/include/protobuf/config.h)
 
 endif (MSVC)
 
@@ -194,7 +194,8 @@ aux_source_directory(src/google/protobuf/compiler ${PROJECT_NAME}_SRC)
 aux_source_directory(src/google/protobuf/io       ${PROJECT_NAME}_SRC)
 aux_source_directory(src/google/protobuf/stubs    ${PROJECT_NAME}_SRC)
 
-include_directories(${CMAKE_BINARY_DIR}/include)
+include_directories(${CMAKE_BINARY_DIR}/include
+                    ${CMAKE_BINARY_DIR}/build/include/protobuf)
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 add_definitions(-fPIC)

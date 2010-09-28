@@ -35,7 +35,7 @@ if (MSVC)
     CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
 
     if (NOT HAVE_STDINT_H)
-    configure_file("${CMAKE_BINARY_DIR}/cmake/stdint.h" "${CMAKE_BINARY_DIR}/include/stdint.h" COPYONLY)
+    configure_file("${CMAKE_BINARY_DIR}/cmake/stdint.h" "${CMAKE_BINARY_DIR}/build/include/stdint.h" COPYONLY)
     endif (NOT HAVE_STDINT_H)
 
 endif (MSVC)
@@ -45,7 +45,8 @@ list(APPEND ${PROJECT_NAME}_SRC ${CMAKE_BINARY_DIR}/include/bdb.h)
 
 include_directories(${BerkeleyDB_INCLUDE_DIR}
                     ${Boost_INCLUDE_DIRS}
-                    ${CMAKE_BINARY_DIR}/include)
+                    ${CMAKE_BINARY_DIR}/include
+                    ${CMAKE_BINARY_DIR}/build/include)
 
 add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SRC})
 
