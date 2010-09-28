@@ -125,11 +125,12 @@ if (UNIX)
     set(LOG4CPLUS_DECLSPEC_EXPORT "/**/")
     set(LOG4CPLUS_DECLSPEC_IMPORT "/**/")
 
-    configure_file(${CMAKE_BINARY_DIR}/include/log4cplus/config/defines.hxx.in ${CMAKE_BINARY_DIR}/include/log4cplus/config/defines.hxx)
+    configure_file(${CMAKE_BINARY_DIR}/include/log4cplus/config/defines.hxx.in ${CMAKE_BINARY_DIR}/build/include/log4cplus/config/defines.hxx)
 
 endif (UNIX)
 
-include_directories(${CMAKE_BINARY_DIR}/include)
+include_directories(${CMAKE_BINARY_DIR}/include
+                    ${CMAKE_BINARY_DIR}/build/include)
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 add_definitions(-fPIC)
