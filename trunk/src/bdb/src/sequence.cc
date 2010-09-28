@@ -38,7 +38,7 @@
 #include <db.h>
 
 // Check for Berkeley DB version
-#if (DB_VERSION_MAJOR != 4) || (DB_VERSION_MINOR < 7)
+#if (DB_VERSION_MAJOR < 4) || (DB_VERSION_MAJOR == 4) && (DB_VERSION_MINOR < 7)
 #error Berkeley DB 4.7 or later is required.
 #endif
 
