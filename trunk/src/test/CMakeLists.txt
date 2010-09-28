@@ -23,7 +23,10 @@ cmake_minimum_required(VERSION 2.6)
 
 aux_source_directory(src ${PROJECT_NAME}_SRC)
 
-include_directories(${CMAKE_BINARY_DIR}/include hdr)
+include_directories(${CMAKE_BINARY_DIR}/include
+                    ${CMAKE_BINARY_DIR}/build/include
+                    hdr)
+
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRC})
