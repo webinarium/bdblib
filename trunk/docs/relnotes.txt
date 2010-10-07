@@ -2,8 +2,8 @@
 RELEASE NOTES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Release tag  : BDBLIB_1-0-0
-Release date : 2010-09-19
+Release tag  : BDBLIB_1-0-1
+Release date : 2010-10-07
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 BUILD & USAGE
@@ -31,6 +31,22 @@ Linux 2.6.31 (32 bit)    GCC 4.4.1             4.7.25         1.38.0
 Linux 2.6.32 (64 bit)    GCC 4.4.3             4.8.24         1.40.0
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CHANGED FILES ([M]odified, [A]dded, [D]eleted)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[M] src/bdb/CMakeLists.txt
+[M] src/bdb/src/bdb.cc
+[M] src/bdb/src/database.cc
+[M] src/bdb/src/index.cc
+[M] src/bdb/src/recordset.cc
+[M] src/bdb/src/sequence.cc
+[M] src/bdb/src/table.cc
+[M] src/log4cplus/CMakeLists.txt
+[M] src/protobuf/CMakeLists.txt
+[M] src/protoc/CMakeLists.txt
+[M] src/test/CMakeLists.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PLANNED NEW FEATURES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -41,5 +57,17 @@ KNOWN ISSUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 None.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NEW FEATURES INTEGRATED IN THIS RELEASE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Make CMake-generated files more isolated from project sources.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+BUG FIXES INTEGRATED IN THIS RELEASE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fix Berkeley DB version checking.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
