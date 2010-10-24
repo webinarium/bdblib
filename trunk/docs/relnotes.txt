@@ -2,8 +2,8 @@
 RELEASE NOTES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Release tag  : BDBLIB_1-0-1
-Release date : 2010-10-07
+Release tag  : BDBLIB_1-0-2
+Release date : 2010-10-24
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 BUILD & USAGE
@@ -16,7 +16,7 @@ Please check the following link:
 3RD PARTY LIBRARIES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-log4cplus        : 1.0.4 RC10
+log4cplus        : 1.0.4 RC11
 Protocol Buffers : 2.3.0
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,23 +28,23 @@ Operating System         Compiler              Berkeley DB    Boost
 Windows XP (32 bit)      Visual Studio 2008    4.7.25         1.37.0
 Windows XP (32 bit)      Visual Studio 2010    4.8.30         1.43.0
 Linux 2.6.31 (32 bit)    GCC 4.4.1             4.7.25         1.38.0
-Linux 2.6.32 (64 bit)    GCC 4.4.3             4.8.24         1.40.0
+Linux 2.6.35 (64 bit)    GCC 4.4.5             4.8.30         1.42.0
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CHANGED FILES ([M]odified, [A]dded, [D]eleted)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[M] src/bdb/CMakeLists.txt
-[M] src/bdb/src/bdb.cc
-[M] src/bdb/src/database.cc
-[M] src/bdb/src/index.cc
-[M] src/bdb/src/recordset.cc
-[M] src/bdb/src/sequence.cc
-[M] src/bdb/src/table.cc
-[M] src/log4cplus/CMakeLists.txt
-[M] src/protobuf/CMakeLists.txt
-[M] src/protoc/CMakeLists.txt
-[M] src/test/CMakeLists.txt
+[M] src/include/log4cplus/helpers/syncprims-pthreads.h
+[M] src/include/log4cplus/helpers/syncprims-win32.h
+[M] src/include/log4cplus/helpers/syncprims.h
+[M] src/include/log4cplus/layout.h
+[M] src/include/log4cplus/ndc.h
+[M] src/log4cplus/src/configurator.cxx
+[M] src/log4cplus/src/fileappender.cxx
+[M] src/log4cplus/src/hierarchy.cxx
+[M] src/log4cplus/src/patternlayout.cxx
+[M] src/log4cplus/src/socket-unix.cxx
+[M] src/log4cplus/src/threads.cxx
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PLANNED NEW FEATURES
@@ -62,12 +62,12 @@ None.
 NEW FEATURES INTEGRATED IN THIS RELEASE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Make CMake-generated files more isolated from project sources.
+Upgrade 'log4cplus' up to version 1.0.4 (RC11).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 BUG FIXES INTEGRATED IN THIS RELEASE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fix Berkeley DB version checking.
+None.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
