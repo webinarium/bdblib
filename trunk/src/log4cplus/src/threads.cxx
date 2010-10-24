@@ -23,6 +23,7 @@
 #include <cassert>
 #include <exception>
 #include <stdexcept>
+#include <memory>
 
 #include <log4cplus/config.hxx>
 
@@ -92,13 +93,29 @@ LOG4CPLUS_MUTEX_PTR_DECLARE
 createNewMutex()
 {
 #if defined(LOG4CPLUS_USE_PTHREADS)
-    ::pthread_mutex_t* m = new ::pthread_mutex_t;
-    ::pthread_mutex_init(m, NULL);
+    // The mutexes that we provide need to be recursive. This is
+    // because of double locking, first lock gets acquired in
+    // ConfigurationWatchDogThread::run() through the HierarchyLocker
+    // instance there. The second lock on appender_list_mutex is
+    // attempted in
+    // helpers::AppenderAttachableImpl::removeAllAppenders(). This
+    // results into deadlock on (at least) Linux.
+
+    log4cplus::thread::PthreadMutexAttr mattr;
+    mattr.set_type (log4cplus::thread::Mutex::RECURSIVE);
+
+    std::auto_ptr<pthread_mutex_t> m (new pthread_mutex_t);
+    int ret = pthread_mutex_init (m.get (), &mattr.attr);
+    if (ret != 0)
+        throw std::runtime_error ("createNewMutex(): pthread_mutex_init () has failed.");
+
 #elif defined(LOG4CPLUS_USE_WIN32_THREADS)
-    ::CRITICAL_SECTION* m = new ::CRITICAL_SECTION;
-    ::InitializeCriticalSection(m);
+	std::auto_ptr< ::CRITICAL_SECTION> m (new ::CRITICAL_SECTION);
+    ::InitializeCriticalSection(m.get ());
+
 #endif
-    return m;
+
+    return m.release ();
 }
 
 
