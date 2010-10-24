@@ -24,11 +24,6 @@
 #include <log4cplus/spi/loggingevent.h>
 #include <log4cplus/helpers/syncprims.h>
 
-#if defined(__hpux__)
-# ifndef _XOPEN_SOURCE_EXTENDED
-# define _XOPEN_SOURCE_EXTENDED
-# endif
-#endif
 #include <arpa/inet.h>
  
 #ifdef LOG4CPLUS_HAVE_NETINET_IN_H
@@ -64,7 +59,9 @@ namespace
 {
 
 #if ! defined (LOG4CPLUS_SINGLE_THREADED)
-static thread::Mutex ghbn_mutex;
+// We need to use log4cplus::thread here to work around compilation
+// problem on AIX.
+static log4cplus::thread::Mutex ghbn_mutex;
 
 #endif
 
@@ -103,7 +100,9 @@ get_host_by_name (char const * hostname, std::string * name,
 
 #else
 #  if ! defined (LOG4CPLUS_SINGLE_THREADED)
-    thread::MutexGuard guard (ghbn_mutex);
+    // We need to use log4cplus::thread here to work around
+    // compilation problem on AIX.
+    log4cplus::thread::MutexGuard guard (ghbn_mutex);
 #  endif
 
     struct ::hostent * hp = gethostbyname (hostname);
@@ -116,7 +115,7 @@ get_host_by_name (char const * hostname, std::string * name,
 
     if (addr)
     {
-	assert (hp->h_length <= sizeof (addr->sin_addr));
+        assert (hp->h_length <= sizeof (addr->sin_addr));
         std::memcpy (&addr->sin_addr, hp->h_addr_list[0], hp->h_length);
     }
 
@@ -198,6 +197,29 @@ log4cplus::helpers::connectSocket(const log4cplus::tstring& hostn,
 }
 
 
+namespace
+{
+
+
+// Some systems like HP-UX have socklen_t but accept() does not use it
+// as type of its 3rd parameter. This wrapper works around this
+// incompatibility.
+template <typename sockaddr_ptr_type, typename socklen_type>
+static
+SOCKET_TYPE
+accept_wrap (
+    int (* accept_func) (int, sockaddr_ptr_type, socklen_type *),
+    SOCKET_TYPE sock, struct sockaddr * sa, socklen_t * len)
+{
+    socklen_type l = *len;
+    SOCKET_TYPE result = static_cast<SOCKET_TYPE>(accept_func (sock, sa, &l));
+    *len = static_cast<socklen_t>(l);
+    return result;
+}
+
+
+} // namespace
+
 
 SOCKET_TYPE
 log4cplus::helpers::acceptSocket(SOCKET_TYPE sock, SocketState& state)
@@ -206,7 +228,8 @@ log4cplus::helpers::acceptSocket(SOCKET_TYPE sock, SocketState& state)
     socklen_t len = sizeof(struct sockaddr);
     SOCKET_TYPE clientSock;
 
-    while(   (clientSock = ::accept(sock, (struct sockaddr*)&net_client, &len)) == -1
+    while(   (clientSock = accept_wrap (accept, sock,
+                (struct sockaddr*)&net_client, &len)) == -1
           && (errno == EINTR))
         ;
 
