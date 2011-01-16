@@ -39,6 +39,7 @@ set(${PROJECT_NAME}_SRC
     src/loglog.cxx
     src/logloguser.cxx
     src/ndc.cxx
+    src/nteventlogappender.cxx
     src/nullappender.cxx
     src/objectregistry.cxx
     src/patternlayout.cxx
@@ -54,14 +55,13 @@ set(${PROJECT_NAME}_SRC
     src/syslogappender.cxx
     src/threads.cxx
     src/timehelper.cxx
-    src/version.cxx)
+    src/version.cxx
+    src/win32consoleappender.cxx
+    src/win32debugappender.cxx)
 
 if (WIN32)
 set(${PROJECT_NAME}_SRC ${${PROJECT_NAME}_SRC}
-    src/nteventlogappender.cxx
-    src/socket-win32.cxx
-    src/win32consoleappender.cxx
-    src/win32debugappender.cxx)
+    src/socket-win32.cxx)
 else (WIN32)
 set(${PROJECT_NAME}_SRC ${${PROJECT_NAME}_SRC}
     src/socket-unix.cxx)
