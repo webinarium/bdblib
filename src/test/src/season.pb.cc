@@ -2,6 +2,9 @@
 
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "season.pb.h"
+
+#include <algorithm>
+
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -114,7 +117,6 @@ struct StaticDescriptorInitializer_season_2eproto {
 
 // ===================================================================
 
-const ::std::string key::_default_season_;
 #ifndef _MSC_VER
 const int key::kSeasonFieldNumber;
 #endif  // !_MSC_VER
@@ -135,7 +137,7 @@ key::key(const key& from)
 
 void key::SharedCtor() {
   _cached_size_ = 0;
-  season_ = const_cast< ::std::string*>(&_default_season_);
+  season_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -144,7 +146,7 @@ key::~key() {
 }
 
 void key::SharedDtor() {
-  if (season_ != &_default_season_) {
+  if (season_ != &::google::protobuf::internal::kEmptyString) {
     delete season_;
   }
   if (this != default_instance_) {
@@ -173,8 +175,8 @@ key* key::New() const {
 
 void key::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (_has_bit(0)) {
-      if (season_ != &_default_season_) {
+    if (has_season()) {
+      if (season_ != &::google::protobuf::internal::kEmptyString) {
         season_->clear();
       }
     }
@@ -224,7 +226,7 @@ bool key::MergePartialFromCodedStream(
 void key::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -241,7 +243,7 @@ void key::SerializeWithCachedSizes(
 ::google::protobuf::uint8* key::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -295,7 +297,7 @@ void key::MergeFrom(const ::google::protobuf::Message& from) {
 void key::MergeFrom(const key& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_season()) {
       set_season(from.season());
     }
   }

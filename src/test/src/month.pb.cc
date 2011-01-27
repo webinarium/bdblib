@@ -2,6 +2,9 @@
 
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "month.pb.h"
+
+#include <algorithm>
+
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -192,7 +195,6 @@ struct StaticDescriptorInitializer_month_2eproto {
 
 // ===================================================================
 
-const ::std::string key::_default_month_;
 #ifndef _MSC_VER
 const int key::kMonthFieldNumber;
 #endif  // !_MSC_VER
@@ -213,7 +215,7 @@ key::key(const key& from)
 
 void key::SharedCtor() {
   _cached_size_ = 0;
-  month_ = const_cast< ::std::string*>(&_default_month_);
+  month_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -222,7 +224,7 @@ key::~key() {
 }
 
 void key::SharedDtor() {
-  if (month_ != &_default_month_) {
+  if (month_ != &::google::protobuf::internal::kEmptyString) {
     delete month_;
   }
   if (this != default_instance_) {
@@ -251,8 +253,8 @@ key* key::New() const {
 
 void key::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (_has_bit(0)) {
-      if (month_ != &_default_month_) {
+    if (has_month()) {
+      if (month_ != &::google::protobuf::internal::kEmptyString) {
         month_->clear();
       }
     }
@@ -302,7 +304,7 @@ bool key::MergePartialFromCodedStream(
 void key::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string month = 1;
-  if (_has_bit(0)) {
+  if (has_month()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->month().data(), this->month().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -319,7 +321,7 @@ void key::SerializeWithCachedSizes(
 ::google::protobuf::uint8* key::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string month = 1;
-  if (_has_bit(0)) {
+  if (has_month()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->month().data(), this->month().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -373,7 +375,7 @@ void key::MergeFrom(const ::google::protobuf::Message& from) {
 void key::MergeFrom(const key& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_month()) {
       set_month(from.month());
     }
   }
@@ -418,7 +420,6 @@ void key::Swap(key* other) {
 
 // ===================================================================
 
-const ::std::string data::_default_season_;
 #ifndef _MSC_VER
 const int data::kSeasonFieldNumber;
 const int data::kDaysFieldNumber;
@@ -441,7 +442,7 @@ data::data(const data& from)
 
 void data::SharedCtor() {
   _cached_size_ = 0;
-  season_ = const_cast< ::std::string*>(&_default_season_);
+  season_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   days_ = 0;
   ordnum_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -452,7 +453,7 @@ data::~data() {
 }
 
 void data::SharedDtor() {
-  if (season_ != &_default_season_) {
+  if (season_ != &::google::protobuf::internal::kEmptyString) {
     delete season_;
   }
   if (this != default_instance_) {
@@ -481,8 +482,8 @@ data* data::New() const {
 
 void data::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (_has_bit(0)) {
-      if (season_ != &_default_season_) {
+    if (has_season()) {
+      if (season_ != &::google::protobuf::internal::kEmptyString) {
         season_->clear();
       }
     }
@@ -523,7 +524,7 @@ bool data::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &days_)));
-          _set_bit(1);
+          set_has_days();
         } else {
           goto handle_uninterpreted;
         }
@@ -539,7 +540,7 @@ bool data::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &ordnum_)));
-          _set_bit(2);
+          set_has_ordnum();
         } else {
           goto handle_uninterpreted;
         }
@@ -566,7 +567,7 @@ bool data::MergePartialFromCodedStream(
 void data::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -575,12 +576,12 @@ void data::SerializeWithCachedSizes(
   }
   
   // required int32 days = 2;
-  if (_has_bit(1)) {
+  if (has_days()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->days(), output);
   }
   
   // required int64 ordnum = 3;
-  if (_has_bit(2)) {
+  if (has_ordnum()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->ordnum(), output);
   }
   
@@ -593,7 +594,7 @@ void data::SerializeWithCachedSizes(
 ::google::protobuf::uint8* data::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -603,12 +604,12 @@ void data::SerializeWithCachedSizes(
   }
   
   // required int32 days = 2;
-  if (_has_bit(1)) {
+  if (has_days()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->days(), target);
   }
   
   // required int64 ordnum = 3;
-  if (_has_bit(2)) {
+  if (has_ordnum()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->ordnum(), target);
   }
   
@@ -671,13 +672,13 @@ void data::MergeFrom(const ::google::protobuf::Message& from) {
 void data::MergeFrom(const data& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_season()) {
       set_season(from.season());
     }
-    if (from._has_bit(1)) {
+    if (from.has_days()) {
       set_days(from.days());
     }
-    if (from._has_bit(2)) {
+    if (from.has_ordnum()) {
       set_ordnum(from.ordnum());
     }
   }
@@ -724,7 +725,6 @@ void data::Swap(data* other) {
 
 // ===================================================================
 
-const ::std::string season_ix::_default_season_;
 #ifndef _MSC_VER
 const int season_ix::kSeasonFieldNumber;
 #endif  // !_MSC_VER
@@ -745,7 +745,7 @@ season_ix::season_ix(const season_ix& from)
 
 void season_ix::SharedCtor() {
   _cached_size_ = 0;
-  season_ = const_cast< ::std::string*>(&_default_season_);
+  season_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -754,7 +754,7 @@ season_ix::~season_ix() {
 }
 
 void season_ix::SharedDtor() {
-  if (season_ != &_default_season_) {
+  if (season_ != &::google::protobuf::internal::kEmptyString) {
     delete season_;
   }
   if (this != default_instance_) {
@@ -783,8 +783,8 @@ season_ix* season_ix::New() const {
 
 void season_ix::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (_has_bit(0)) {
-      if (season_ != &_default_season_) {
+    if (has_season()) {
+      if (season_ != &::google::protobuf::internal::kEmptyString) {
         season_->clear();
       }
     }
@@ -834,7 +834,7 @@ bool season_ix::MergePartialFromCodedStream(
 void season_ix::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -851,7 +851,7 @@ void season_ix::SerializeWithCachedSizes(
 ::google::protobuf::uint8* season_ix::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string season = 1;
-  if (_has_bit(0)) {
+  if (has_season()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->season().data(), this->season().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
@@ -905,7 +905,7 @@ void season_ix::MergeFrom(const ::google::protobuf::Message& from) {
 void season_ix::MergeFrom(const season_ix& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_season()) {
       set_season(from.season());
     }
   }
@@ -1024,7 +1024,7 @@ bool days_ix::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &days_)));
-          _set_bit(0);
+          set_has_days();
         } else {
           goto handle_uninterpreted;
         }
@@ -1051,7 +1051,7 @@ bool days_ix::MergePartialFromCodedStream(
 void days_ix::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required int32 days = 1;
-  if (_has_bit(0)) {
+  if (has_days()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->days(), output);
   }
   
@@ -1064,7 +1064,7 @@ void days_ix::SerializeWithCachedSizes(
 ::google::protobuf::uint8* days_ix::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required int32 days = 1;
-  if (_has_bit(0)) {
+  if (has_days()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->days(), target);
   }
   
@@ -1113,7 +1113,7 @@ void days_ix::MergeFrom(const ::google::protobuf::Message& from) {
 void days_ix::MergeFrom(const days_ix& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_days()) {
       set_days(from.days());
     }
   }
@@ -1232,7 +1232,7 @@ bool ordnum_ix::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &ordnum_)));
-          _set_bit(0);
+          set_has_ordnum();
         } else {
           goto handle_uninterpreted;
         }
@@ -1259,7 +1259,7 @@ bool ordnum_ix::MergePartialFromCodedStream(
 void ordnum_ix::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required int64 ordnum = 1;
-  if (_has_bit(0)) {
+  if (has_ordnum()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->ordnum(), output);
   }
   
@@ -1272,7 +1272,7 @@ void ordnum_ix::SerializeWithCachedSizes(
 ::google::protobuf::uint8* ordnum_ix::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required int64 ordnum = 1;
-  if (_has_bit(0)) {
+  if (has_ordnum()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->ordnum(), target);
   }
   
@@ -1321,7 +1321,7 @@ void ordnum_ix::MergeFrom(const ::google::protobuf::Message& from) {
 void ordnum_ix::MergeFrom(const ordnum_ix& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from._has_bit(0)) {
+    if (from.has_ordnum()) {
       set_ordnum(from.ordnum());
     }
   }
