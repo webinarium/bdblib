@@ -68,7 +68,7 @@ if (MSVC)
     aux_source_directory(src/google/protobuf/compiler/java   ${PROJECT_NAME}_SRC)
     aux_source_directory(src/google/protobuf/compiler/python ${PROJECT_NAME}_SRC)
 
-    add_definitions(-DPROTOBUF_USE_DLLS -DLIBPROTOC_EXPORTS)
+    add_definitions(-DLIBPROTOC_EXPORTS)
 
     add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRC})
     add_dependencies(${PROJECT_NAME} protobuf)
