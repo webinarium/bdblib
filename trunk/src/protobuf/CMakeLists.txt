@@ -203,12 +203,12 @@ endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 if (MSVC)
 add_definitions(-W0)
-add_definitions(-DPROTOBUF_USE_DLLS -DLIBPROTOBUF_EXPORTS)
+add_definitions(-DLIBPROTOBUF_EXPORTS)
 else (MSVC)
 add_definitions(-w)
 endif (MSVC)
 
-add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SRC})
+add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRC})
 
 if (HAVE_PTHREAD)
 target_link_libraries(${PROJECT_NAME} pthread)
