@@ -2,8 +2,8 @@
 RELEASE NOTES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Release tag  : BDBLIB_1-0-2
-Release date : 2010-10-24
+Release tag  : BDBLIB_1-0-3
+Release date : 2011-02-17
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 BUILD & USAGE
@@ -16,8 +16,8 @@ Please check the following link:
 3RD PARTY LIBRARIES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-log4cplus        : 1.0.4 RC11
-Protocol Buffers : 2.3.0
+log4cplus        : 1.0.4
+Protocol Buffers : 2.4.0
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TESTED WITH
@@ -26,7 +26,6 @@ TESTED WITH
 Operating System         Compiler              Berkeley DB    Boost
 
 Windows XP (32 bit)      Visual Studio 2008    4.7.25         1.37.0
-Windows XP (32 bit)      Visual Studio 2010    4.8.30         1.43.0
 Linux 2.6.31 (32 bit)    GCC 4.4.1             4.7.25         1.38.0
 Linux 2.6.35 (64 bit)    GCC 4.4.5             4.8.30         1.42.0
 
@@ -34,17 +33,96 @@ Linux 2.6.35 (64 bit)    GCC 4.4.5             4.8.30         1.42.0
 CHANGED FILES ([M]odified, [A]dded, [D]eleted)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[M] src/include/log4cplus/helpers/syncprims-pthreads.h
-[M] src/include/log4cplus/helpers/syncprims-win32.h
-[M] src/include/log4cplus/helpers/syncprims.h
-[M] src/include/log4cplus/layout.h
+[M] src/include/google/protobuf/compiler/code_generator.h
+[M] src/include/google/protobuf/compiler/command_line_interface.h
+[M] src/include/google/protobuf/compiler/cpp/cpp_generator.h
+[M] src/include/google/protobuf/compiler/cpp/cpp_helpers.h
+[M] src/include/google/protobuf/compiler/java/java_enum_field.h
+[M] src/include/google/protobuf/compiler/java/java_extension.h
+[M] src/include/google/protobuf/compiler/java/java_field.h
+[M] src/include/google/protobuf/compiler/java/java_file.h
+[M] src/include/google/protobuf/compiler/java/java_generator.h
+[M] src/include/google/protobuf/compiler/java/java_helpers.h
+[M] src/include/google/protobuf/compiler/java/java_message.h
+[M] src/include/google/protobuf/compiler/java/java_message_field.h
+[M] src/include/google/protobuf/compiler/java/java_primitive_field.h
+[A] src/include/google/protobuf/compiler/java/java_string_field.h
+[M] src/include/google/protobuf/compiler/parser.h
+[M] src/include/google/protobuf/compiler/plugin.h
+[M] src/include/google/protobuf/compiler/plugin.pb.h
+[M] src/include/google/protobuf/compiler/python/python_generator.h
+[M] src/include/google/protobuf/compiler/subprocess.h
+[M] src/include/google/protobuf/compiler/zip_writer.h
+[M] src/include/google/protobuf/descriptor.pb.h
+[M] src/include/google/protobuf/extension_set.h
+[M] src/include/google/protobuf/generated_message_util.h
+[M] src/include/google/protobuf/io/coded_stream.h
+[M] src/include/google/protobuf/io/printer.h
+[M] src/include/google/protobuf/io/tokenizer.h
+[M] src/include/google/protobuf/message.h
+[M] src/include/google/protobuf/repeated_field.h
+[M] src/include/google/protobuf/stubs/common.h
+[M] src/include/google/protobuf/stubs/strutil.h
+[M] src/include/google/protobuf/text_format.h
+[M] src/include/google/protobuf/wire_format_lite_inl.h
+[M] src/include/log4cplus/config/win32.h
 [M] src/include/log4cplus/ndc.h
-[M] src/log4cplus/src/configurator.cxx
-[M] src/log4cplus/src/fileappender.cxx
-[M] src/log4cplus/src/hierarchy.cxx
-[M] src/log4cplus/src/patternlayout.cxx
+[M] src/include/log4cplus/win32debugappender.h
+[M] src/log4cplus/CMakeLists.txt
+[M] src/log4cplus/src/global-init.cxx
+[M] src/log4cplus/src/layout.cxx
 [M] src/log4cplus/src/socket-unix.cxx
-[M] src/log4cplus/src/threads.cxx
+[M] src/log4cplus/src/win32debugappender.cxx
+[M] src/protobuf/CMakeLists.txt
+[M] src/protobuf/hdr/config.h.cmake
+[M] src/protobuf/src/google/protobuf/compiler/importer.cc
+[M] src/protobuf/src/google/protobuf/compiler/parser.cc
+[M] src/protobuf/src/google/protobuf/descriptor.cc
+[M] src/protobuf/src/google/protobuf/descriptor.pb.cc
+[M] src/protobuf/src/google/protobuf/descriptor_database.cc
+[M] src/protobuf/src/google/protobuf/extension_set.cc
+[M] src/protobuf/src/google/protobuf/generated_message_reflection.cc
+[M] src/protobuf/src/google/protobuf/generated_message_util.cc
+[M] src/protobuf/src/google/protobuf/io/coded_stream.cc
+[M] src/protobuf/src/google/protobuf/io/gzip_stream.cc
+[M] src/protobuf/src/google/protobuf/io/printer.cc
+[M] src/protobuf/src/google/protobuf/io/tokenizer.cc
+[M] src/protobuf/src/google/protobuf/repeated_field.cc
+[M] src/protobuf/src/google/protobuf/stubs/common.cc
+[D] src/protobuf/src/google/protobuf/stubs/hash.cc
+[M] src/protobuf/src/google/protobuf/text_format.cc
+[M] src/protoc/CMakeLists.txt
+[M] src/protoc/src/google/protobuf/compiler/code_generator.cc
+[M] src/protoc/src/google/protobuf/compiler/command_line_interface.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_enum_field.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_file.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_generator.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_helpers.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_message.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_message_field.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_primitive_field.cc
+[M] src/protoc/src/google/protobuf/compiler/cpp/cpp_string_field.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_enum.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_enum_field.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_extension.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_field.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_file.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_generator.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_helpers.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_message.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_message_field.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_primitive_field.cc
+[M] src/protoc/src/google/protobuf/compiler/java/java_service.cc
+[A] src/protoc/src/google/protobuf/compiler/java/java_string_field.cc
+[M] src/protoc/src/google/protobuf/compiler/plugin.cc
+[M] src/protoc/src/google/protobuf/compiler/plugin.pb.cc
+[M] src/protoc/src/google/protobuf/compiler/python/python_generator.cc
+[M] src/protoc/src/google/protobuf/compiler/subprocess.cc
+[M] src/protoc/src/google/protobuf/compiler/zip_writer.cc
+[M] src/test/hdr/month.pb.h
+[M] src/test/hdr/season.pb.h
+[M] src/test/src/month.pb.cc
+[M] src/test/src/season.pb.cc
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PLANNED NEW FEATURES
@@ -62,7 +140,8 @@ None.
 NEW FEATURES INTEGRATED IN THIS RELEASE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Upgrade 'log4cplus' up to version 1.0.4 (RC11).
+Upgrade 'log4cplus' up to version 1.0.4.
+Upgrade 'Protocol Buffers' up to version 2.4.0.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 BUG FIXES INTEGRATED IN THIS RELEASE
