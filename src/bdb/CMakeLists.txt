@@ -25,7 +25,6 @@ find_package(BerkeleyDB 4.7 REQUIRED)
 
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS   ON)
-set(Boost_ADDITIONAL_VERSIONS "1.37" "1.38" "1.39" "1.40" "1.41" "1.42" "1.43" "1.44")
 
 find_package(Boost 1.37.0 REQUIRED COMPONENTS date_time)
 
