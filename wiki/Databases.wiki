@@ -74,7 +74,7 @@ Any database in the library is always opened in the transactional mode, so you c
 
 to commit last started transaction:
 
-}}}
+{{{
     db.commit_transaction();
 }}}
 
