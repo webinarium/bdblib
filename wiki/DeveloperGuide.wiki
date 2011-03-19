@@ -1,3 +1,1 @@
 This library is an upper-level layer on top of [http://www.oracle.com/technology/products/berkeley-db Berkeley DB] library. Main goals of the library are to simplify original *Berkeley DB* API, and to add seamless serialization.
-
-----
