@@ -1,3 +1,5 @@
+#sidebar Content
+
 The library uses *[http://log4cplus.sourceforge.net log4cplus]* for run-time logging. A client, uses the library, is responsible for one-step configuration of the library's logger before calling any library function by following statement:
 
 {{{

@@ -1,3 +1,5 @@
+#sidebar Content
+
 In the [Indexes previous section] we created an index for patient's city, and we are able to filter our recordsets by _city_ value now. Also we can add another index for year of birth to get only patient's with specified birth year. But what if we need only patients from Vladivostok, who were born in 1978?
 
 To use two (or more) indexes in one recordset we have to create each index and then join them. Let's illustrate it right by the source code. We extended it several times, so let's bring all parts together now, adding new ones where required.
