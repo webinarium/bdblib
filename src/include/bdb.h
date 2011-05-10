@@ -116,9 +116,9 @@ typedef vector <recordset *> joinlist;
  *
  * @param [in] dbt1 "DBT" structure, representing the application supplied key.
  * @param [in] dbt2 "DBT" structure, representing the current btree's key.
- * @return 0 if dbt1 is equal to dbt2, \n
- *         -1 if dbt1 is less than dbt2, \n
- *         +1 if dbt1 is greater than dbt2.
+ * @return 0 if dbt1 is equal to dbt2.
+ * @return -1 if dbt1 is less than dbt2.
+ * @return +1 if dbt1 is greater than dbt2.
  */
 typedef int (*compare_callback) (DB *, const DBT * dbt1, const DBT * dbt2);
 
@@ -128,8 +128,8 @@ typedef int (*compare_callback) (DB *, const DBT * dbt1, const DBT * dbt2);
  * @param [in]  key    "DBT" structure, referencing the primary key.
  * @param [in]  data   "DBT" structure, referencing the primary data.
  * @param [out] result Zeroed "DBT" structure, which the callback function should fill in.
- * @return 0 on success, \n
- *         a non-zero value if index should not contain a record for specified primary key/data pair.
+ * @return 0 on success.
+ * @return A non-zero value if index should not contain a record for specified primary key/data pair.
  */
 typedef int (*index_callback) (DB *, const DBT * key, const DBT * data, DBT * result);
 
@@ -140,8 +140,8 @@ typedef int (*index_callback) (DB *, const DBT * key, const DBT * data, DBT * re
  * @param [in,out] pdata   "DBT" structure, referencing the primary data.
  * @param [in]     fkey    "DBT" structure, referencing the foreign key.
  * @param [out]    changed A pointer to a boolean value, indicated whether the primary data has been changed.
- * @return 0 on success, \n
- *         a non-zero value if primary data cannot be updated.
+ * @return 0 on success.
+ * @return A non-zero value if primary data cannot be updated.
  */
 typedef int (*nullify_callback) (DB *, const DBT * pkey, DBT * pdata, const DBT * fkey, int * changed);
 

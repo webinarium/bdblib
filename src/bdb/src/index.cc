@@ -180,8 +180,8 @@ void index::add_foreign (table            * foreign,    /**< [in] Master table. 
  * Checks whether a record with specified key exists in the index.
  * <strong>NOTE:</strong> index can have duplicated keys.
  *
- * @return true  - at least one record exists, \n
- *         false - no record is found.
+ * @return true  - at least one record exists.
+ * @return false - no record is found.
  */
 bool index::exists (const Message * key)    /**< [in] Key of the record to be checked. */
 {

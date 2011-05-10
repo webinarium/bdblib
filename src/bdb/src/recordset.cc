@@ -243,8 +243,8 @@ recordset::~recordset () throw ()
  *
  * @throw bdb::exception BDB_ERROR_UNKNOWN - unknown error.
  *
- * @return true  - record is successfully fetched, \n
- *         false - no more records to fetch.
+ * @return true  - record is successfully fetched.
+ * @return false - no more records to fetch.
  */
 bool recordset::fetch (Message * key,       /**< [out] Key of fetched record.  */
                        Message * data)      /**< [out] Data of fetched record. */

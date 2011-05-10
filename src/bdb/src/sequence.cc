@@ -135,6 +135,7 @@ sequence::~sequence () throw ()
  * Generates next unique identifier and returns it.
  *
  * @return 64-bit integer value.
+ *
  * @throw bdb::exception BDB_ERROR_UNKNOWN - unknown error.
  */
 int64_t sequence::id ()
