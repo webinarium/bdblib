@@ -195,8 +195,8 @@ index * table::add_index (const char       * name,      /**< [in] Name of the in
  * Checks whether a record with specified key exists in the table.
  * <strong>NOTE:</strong> all keys in the table are unique.
  *
- * @return true  - the record exists, \n
- *         false - the record is not found.
+ * @return true  - the record exists.
+ * @return false - the record is not found.
  */
 bool table::exists (const Message * key)    /**< [in] Key of the record to be checked. */
 {
