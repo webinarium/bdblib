@@ -7,4 +7,4 @@
  * [Indexes Indexes]
  * [NaturalJoins Natural Joins]
  * [ForeignKeys Foreign Keys]
- * [http://bdblib.googlecode.com/svn/trunk/doxygen/index.html Library Reference]
+ * [http://bdblib.googlecode.com/svn/doxygen/index.html Library Reference]
