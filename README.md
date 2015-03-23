@@ -9,3 +9,4 @@ This library is an upper-level layer on top of [Berkeley DB](http://www.oracle.c
 * [Indexes](//github.com/arodygin/bdblib/wiki/Indexes)
 * [Natural Joins](//github.com/arodygin/bdblib/wiki/Natural-Joins)
 * [Foreign Keys](//github.com/arodygin/bdblib/wiki/Foreign-Keys)
+* [Library Reference](//arodygin.github.io/bdblib/)
